@@ -1,146 +1,229 @@
+## =====================
+## OS generated files
+## =====================
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
-
-# Thumbnails
 ._*
-
-# Icon must end with two \\r
 Icon
-
-# Files that might appear in the root of a volume
+.Spotlight-V100
+.Trashes
 .VolumeIcon.icns
 
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+## =====================
+## IDE / Editor
+## =====================
 # VS Code
 .vscode/
 .history/
 
-# Visual Studio / .NET
-*.user
+# Visual Studio
+.vs/
 *.suo
+*.user
 *.userosscache
 *.sln.docstates
-.vs/
-.vs/*
-bin/
-obj/
-TestResults/
-*.cache
-*.log
 *.vspscc
 *.vssscc
 
-# Rider
+# JetBrains (Rider / IntelliJ)
 .idea/
+*.iml
 *.sln.iml
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim / Emacs
+*.swp
+*.swo
+*~.nib
+*.kate-swp
+
+## =====================
+## .NET / C#
+## =====================
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Ll]og/
+[Ll]ogs/
+TestResults/
+artifacts/
+
+# User-specific files
+*.rsuser
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebugPublic/
+[Rr]eleases/
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+!**/[Pp]ackages/repositories.config
 
 # NuGet
 *.nupkg
-# The packages folder can be ignored because of Package Restore
-**/packages/*
-!**/packages/build/
-!**/packages/repositories.config
-# NuGet v3's project.json files produce more files, ignore them
+*.snupkg
+**/[Pp]ackages/*
 project.lock.json
 project.fragment.lock.json
-artifacts/
 
-# ASP.NET Scaffolding
+# ASP.NET
 ScaffoldingReadMe.txt
 
-# IIS Express
-/.vs/config/applicationhost.config
-
-# Publish outputs
+# Publish profiles / outputs
 */publish/
+*.pubxml
+*.publishproj
 
-# Node
+# .NET tools
+.dotnet/
+tools/
+
+# Application settings with environment overrides (keep base appsettings.json)
+appsettings.*.json
+!appsettings.json
+
+## =====================
+## Node.js
+## =====================
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+.yarn/
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.eslintcache
+.stylelintcache
 
-# Python
+## =====================
+## Python
+## =====================
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyo
+*.pyd
+.Python
 env/
 venv/
 .venv/
 env.bak/
 venv.bak/
-.Python
 pyvenv.cfg
-
-# pipenv
 Pipfile.lock
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
 
-# Pytest
-.cache/
-coverage/
-htmlcov/
-
-# Byte-compiled / optimized / DLL files
-*.pyc
-*.pyo
-*.pyd
-
-# Jupyter Notebook
+# Jupyter
 .ipynb_checkpoints
 
-# Logs
-*.log
-logs/
+## =====================
+## Azure / Azure Developer CLI
+## =====================
+.azure/
+*.azd.env
 
-# Secrets / env files
+## =====================
+## Bicep / ARM
+## =====================
+# Compiled ARM templates (keep main.json if intentionally committed)
+# Uncomment the next line to ignore all generated ARM JSON:
+# *.json
+# !appsettings.json
+# !package.json
+# !package-lock.json
+
+## =====================
+## Jekyll (GitHub Pages)
+## =====================
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+## =====================
+## Docker
+## =====================
+docker-compose.override.yml
+
+## =====================
+## Secrets / Credentials
+## =====================
 .env
 .env.*
+!.env.example
+!.env.template
 secrets.json
 *.pem
 *.key
+*.pfx
+*.cer
+*.p12
 
-# Database
+## =====================
+## Logs
+## =====================
+*.log
+logs/
+
+## =====================
+## Database
+## =====================
 *.db
 *.sqlite
 *.sqlite3
+*.mdf
+*.ldf
+*.ndf
 
-# Temporary files
-*.tmp
-*.temp
-*.swp
-*~
-
-# Editors
-*~.nib
-*.sublime-workspace
-*.sublime-project
-*.kate-swp
-
-# macOS Finder attributes
-*.DS_Store
-
-# Certificates
-*.pfx
-*.cer
-
-# Coverage / test results
+## =====================
+## Test / Coverage
+## =====================
+coverage/
 coverage.xml
 coverage-html/
+htmlcov/
+*.coverage
+.cache/
 
-# JetBrains
-.idea/
-*.iml
+## =====================
+## Build / Temp
+## =====================
+*.tmp
+*.temp
+*.bak
+*.orig
 
-# Generated files
-appsettings.*.json
-
-# Misc
-Thumbs.db
-desktop.ini
-
-# Keep track of local configs that may be useful to commit by exception
+## =====================
+## Misc
+## =====================
+# Keep these tracked
 !/.gitattributes
 !/.gitignore
-.DS_Store
