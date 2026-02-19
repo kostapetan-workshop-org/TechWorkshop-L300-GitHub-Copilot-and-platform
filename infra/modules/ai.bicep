@@ -158,6 +158,9 @@ resource aiProject 'Microsoft.MachineLearningServices/workspaces@2024-10-01' = {
 @description('The endpoint of the AI Services account')
 output aiServicesEndpoint string = aiServices.properties.endpoint
 
+@description('The name of the AI Services account')
+output aiServicesName string = aiServices.name
+
 @description('The resource ID of the AI Hub')
 output aiHubId string = aiHub.id
 

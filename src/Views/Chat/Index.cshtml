@@ -1,0 +1,116 @@
+@{
+    ViewData["Title"] = "Chat";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-3"><i class="bi bi-chat-dots"></i> AI Chat Assistant</h2>
+        <p class="text-muted">Ask our AI assistant anything about Zava Storefront.</p>
+
+        <div id="chat-container" class="border rounded p-3 mb-3 bg-light" style="height: 400px; overflow-y: auto;">
+            <div id="chat-messages">
+                <div class="text-muted text-center mt-5">
+                    <i class="bi bi-chat-dots" style="font-size: 2rem;"></i>
+                    <p>Start a conversation by typing a message below.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="chat-error" class="alert alert-danger d-none mb-3" role="alert"></div>
+
+        <form id="chat-form" class="d-flex gap-2">
+            <input type="text" id="chat-input" class="form-control" placeholder="Type your message..."
+                   maxlength="2000" autocomplete="off" />
+            <button type="submit" id="send-btn" class="btn btn-primary d-flex align-items-center gap-1">
+                <i class="bi bi-send"></i> Send
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            var $messages = $('#chat-messages');
+            var $container = $('#chat-container');
+            var $input = $('#chat-input');
+            var $form = $('#chat-form');
+            var $sendBtn = $('#send-btn');
+            var $error = $('#chat-error');
+            var firstMessage = true;
+
+            function escapeHtml(text) {
+                var div = document.createElement('div');
+                div.appendChild(document.createTextNode(text));
+                return div.innerHTML;
+            }
+
+            function appendMessage(role, text) {
+                if (firstMessage) {
+                    $messages.empty();
+                    firstMessage = false;
+                }
+
+                var isUser = role === 'user';
+                var alignClass = isUser ? 'text-end' : 'text-start';
+                var bgClass = isUser ? 'bg-primary text-white' : 'bg-white border';
+                var label = isUser ? 'You' : 'AI Assistant';
+
+                var html = '<div class="mb-2 ' + alignClass + '">' +
+                    '<small class="text-muted">' + label + '</small>' +
+                    '<div class="d-inline-block rounded p-2 ' + bgClass + '" style="max-width: 80%; text-align: left;">' +
+                    escapeHtml(text) +
+                    '</div></div>';
+
+                $messages.append(html);
+                $container.scrollTop($container[0].scrollHeight);
+            }
+
+            function setLoading(loading) {
+                $sendBtn.prop('disabled', loading);
+                $input.prop('disabled', loading);
+                if (loading) {
+                    $sendBtn.html('<span class="spinner-border spinner-border-sm"></span> Sending...');
+                } else {
+                    $sendBtn.html('<i class="bi bi-send"></i> Send');
+                }
+            }
+
+            $form.on('submit', function (e) {
+                e.preventDefault();
+                $error.addClass('d-none');
+
+                var message = $.trim($input.val());
+                if (!message) return;
+
+                appendMessage('user', message);
+                $input.val('');
+                setLoading(true);
+
+                $.ajax({
+                    url: '@Url.Action("SendMessage", "Chat")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ message: message }),
+                    success: function (data) {
+                        appendMessage('assistant', data.response);
+                    },
+                    error: function (xhr) {
+                        var errorMsg = 'An unexpected error occurred.';
+                        try {
+                            var body = JSON.parse(xhr.responseText);
+                            if (body.error) errorMsg = body.error;
+                        } catch (ex) { }
+                        $error.text(errorMsg).removeClass('d-none');
+                    },
+                    complete: function () {
+                        setLoading(false);
+                        $input.focus();
+                    }
+                });
+            });
+
+            $input.focus();
+        });
+    </script>
+}

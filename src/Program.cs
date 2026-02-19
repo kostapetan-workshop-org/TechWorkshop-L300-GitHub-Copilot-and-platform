@@ -19,6 +19,10 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<ProductService>();
 builder.Services.AddScoped<CartService>();
 
+// Register chat services
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<ChatService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
