@@ -7,6 +7,7 @@
     <UserSecretsId>671c82a4-27ed-454b-bdc9-a3c3eeecfc2f</UserSecretsId>
   </PropertyGroup>
  <ItemGroup>
+   <PackageReference Include="Azure.Identity" Version="1.17.1" />
    <PackageReference Include="System.Text.Encodings.Web" Version="4.5.1" />
  </ItemGroup>
 

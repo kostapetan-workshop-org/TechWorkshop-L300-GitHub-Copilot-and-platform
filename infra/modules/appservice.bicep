@@ -13,6 +13,12 @@ param tags object = {}
 @description('Application Insights connection string')
 param appInsightsConnectionString string
 
+@description('Azure AI Services endpoint')
+param aiEndpoint string = ''
+
+@description('Azure AI deployment name')
+param aiDeploymentName string = 'Phi-4'
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   name: appServicePlanName
   location: location
@@ -37,11 +43,19 @@ resource appService 'Microsoft.Web/sites@2023-12-01' = {
   properties: {
     serverFarmId: appServicePlan.id
     siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|6.0'
+      linuxFxVersion: 'DOTNETCORE|8.0'
       appSettings: [
         {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
           value: appInsightsConnectionString
+        }
+        {
+          name: 'AzureAI__Endpoint'
+          value: aiEndpoint
+        }
+        {
+          name: 'AzureAI__DeploymentName'
+          value: aiDeploymentName
         }
       ]
     }

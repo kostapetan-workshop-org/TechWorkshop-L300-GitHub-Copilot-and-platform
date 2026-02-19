@@ -66,6 +66,8 @@ module appService 'modules/appservice.bicep' = {
     appServicePlanName: '${abbrs.appServicePlan}${resourceToken}'
     location: location
     appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
+    aiEndpoint: ai.outputs.aiServicesEndpoint
+    aiDeploymentName: 'Phi-4'
     tags: {
       'azd-env-name': environmentName
     }
@@ -82,6 +84,15 @@ module ai 'modules/ai.bicep' = {
     tags: {
       'azd-env-name': environmentName
     }
+  }
+}
+
+// Grant the App Service managed identity access to AI Services
+module aiRoleAssignment 'modules/ai-role-assignment.bicep' = {
+  scope: rg
+  params: {
+    aiServicesName: ai.outputs.aiServicesName
+    principalId: appService.outputs.principalId
   }
 }
 

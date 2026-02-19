@@ -6,7 +6,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "12455765820712473700"
+      "templateHash": "15628664295432522112"
     }
   },
   "parameters": {
@@ -301,6 +301,12 @@
           "appInsightsConnectionString": {
             "value": "[reference('monitoring').outputs.appInsightsConnectionString.value]"
           },
+          "aiEndpoint": {
+            "value": "[reference('ai').outputs.aiServicesEndpoint.value]"
+          },
+          "aiDeploymentName": {
+            "value": "Phi-4"
+          },
           "tags": {
             "value": {
               "azd-env-name": "[parameters('environmentName')]"
@@ -314,7 +320,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "766970876280181033"
+              "templateHash": "14424620138283358471"
             }
           },
           "parameters": {
@@ -348,6 +354,20 @@
               "metadata": {
                 "description": "Application Insights connection string"
               }
+            },
+            "aiEndpoint": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Azure AI Services endpoint"
+              }
+            },
+            "aiDeploymentName": {
+              "type": "string",
+              "defaultValue": "Phi-4",
+              "metadata": {
+                "description": "Azure AI deployment name"
+              }
             }
           },
           "resources": [
@@ -378,11 +398,19 @@
               "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
                 "siteConfig": {
-                  "linuxFxVersion": "DOTNETCORE|6.0",
+                  "linuxFxVersion": "DOTNETCORE|8.0",
                   "appSettings": [
                     {
                       "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
                       "value": "[parameters('appInsightsConnectionString')]"
+                    },
+                    {
+                      "name": "AzureAI__Endpoint",
+                      "value": "[parameters('aiEndpoint')]"
+                    },
+                    {
+                      "name": "AzureAI__DeploymentName",
+                      "value": "[parameters('aiDeploymentName')]"
                     }
                   ]
                 },
@@ -419,6 +447,7 @@
         }
       },
       "dependsOn": [
+        "ai",
         "monitoring",
         "rg"
       ]
@@ -459,7 +488,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "18335595273049631769"
+              "templateHash": "18203900887258389115"
             }
           },
           "parameters": {
@@ -660,6 +689,13 @@
               },
               "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('aiServicesName')), '2024-10-01').endpoint]"
             },
+            "aiServicesName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the AI Services account"
+              },
+              "value": "[parameters('aiServicesName')]"
+            },
             "aiHubId": {
               "type": "string",
               "metadata": {
@@ -678,6 +714,72 @@
         }
       },
       "dependsOn": [
+        "rg"
+      ]
+    },
+    "aiRoleAssignment": {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "[format('aiRoleAssignment-{0}', uniqueString('aiRoleAssignment', deployment().name))]",
+      "resourceGroup": "[variables('rgName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "aiServicesName": {
+            "value": "[reference('ai').outputs.aiServicesName.value]"
+          },
+          "principalId": {
+            "value": "[reference('appService').outputs.principalId.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.40.2.10011",
+              "templateHash": "9097637502582107262"
+            }
+          },
+          "parameters": {
+            "aiServicesName": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the AI Services (Cognitive Services) account to grant access to"
+              }
+            },
+            "principalId": {
+              "type": "string",
+              "metadata": {
+                "description": "Principal ID of the managed identity to grant access"
+              }
+            }
+          },
+          "variables": {
+            "cognitiveServicesOpenAIUserRoleId": "5e0bd9bd-7b93-4f28-af87-19fc36ad61bd"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "scope": "[resourceId('Microsoft.CognitiveServices/accounts', parameters('aiServicesName'))]",
+              "name": "[guid(resourceId('Microsoft.CognitiveServices/accounts', parameters('aiServicesName')), parameters('principalId'), variables('cognitiveServicesOpenAIUserRoleId'))]",
+              "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('cognitiveServicesOpenAIUserRoleId'))]",
+                "principalId": "[parameters('principalId')]",
+                "principalType": "ServicePrincipal"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "ai",
+        "appService",
         "rg"
       ]
     }
